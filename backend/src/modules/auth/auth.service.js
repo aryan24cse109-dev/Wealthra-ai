@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 import { prisma } from "../../config/database.js";
@@ -76,8 +77,10 @@ export async function linkInvoicesAndConnectionsToUser(user) {
 
   try {
     // 1. Automatically link all unlinked invoices with this email to user.id
+    // Security: Only link invoices from OTHER businesses (businessUserId !== user.id)
     await prisma.invoice.updateMany({
       where: {
+        businessUserId: { not: user.id },
         clientEmail: normalizedEmail,
         clientUserId: null,
       },
@@ -87,8 +90,10 @@ export async function linkInvoicesAndConnectionsToUser(user) {
     });
 
     // 2. Mark any pending invitations for this email as accepted
+    // Security: Only accept invitations sent by OTHER businesses (businessUserId !== user.id)
     await prisma.invitation.updateMany({
       where: {
+        businessUserId: { not: user.id },
         email: normalizedEmail,
         status: "PENDING",
       },
@@ -204,8 +209,32 @@ export async function googleLogin(credential, accountCategory, requestInfo) {
           accountCategory,
         },
       });
+
+      if (accountCategory === "BUSINESS") {
+        await prisma.businessProfile.create({
+          data: {
+            userId: user.id,
+            businessName: `${user.fullName}'s Business`,
+            businessType: "STARTUP",
+            currency: "INR",
+            country: "India",
+          },
+        }).catch(() => {});
+      } else if (accountCategory === "CLIENT") {
+        await prisma.clientProfile.create({
+          data: {
+            userId: user.id,
+            country: "India",
+          },
+        }).catch(() => {});
+      }
     }
   }
+
+  user = await prisma.user.findUnique({
+    where: { id: user.id },
+    include: { businessProfile: true, clientProfile: true },
+  });
 
   if (user.status !== "ACTIVE") {
     throw new ApiError(403, "This account is not active.");
@@ -252,6 +281,8 @@ export async function googleLogin(credential, accountCategory, requestInfo) {
       fullName: user.fullName,
       accountCategory: user.accountCategory,
       onboardingCompleted: user.onboardingCompleted,
+      businessProfile: user.businessProfile,
+      clientProfile: user.clientProfile,
       roleCapabilities,
       navigationMode: roleCapabilities.navigationMode,
       hasBusinessAccess: roleCapabilities.hasBusinessAccess,
@@ -365,6 +396,187 @@ export async function devLogin(email, accountCategory = "BUSINESS", fullName, re
   }
 
   // Dual-role email linking
+  await linkInvoicesAndConnectionsToUser(user);
+
+  const sessionId = crypto.randomUUID();
+  const expiresAt = new Date(Date.now() + SESSION_SECONDS * 1000);
+
+  const token = jwt.sign(
+    {
+      sub: user.id,
+      sid: sessionId,
+    },
+    env.JWT_SECRET,
+    {
+      expiresIn: SESSION_SECONDS,
+      issuer: "bizpilot-ai",
+      audience: "bizpilot-ai-users",
+    }
+  );
+
+  await prisma.authSession.create({
+    data: {
+      id: sessionId,
+      userId: user.id,
+      tokenHash: hashToken(token),
+      expiresAt,
+      ipAddress: requestInfo.ip || null,
+      userAgent: requestInfo.userAgent || null,
+    },
+  });
+
+  const roleCapabilities = await computeUserRoleCapabilities(user);
+
+  return {
+    token,
+    user: {
+      id: user.id,
+      email: user.email,
+      username: user.username,
+      fullName: user.fullName,
+      accountCategory: user.accountCategory,
+      onboardingCompleted: user.onboardingCompleted,
+      businessProfile: user.businessProfile,
+      clientProfile: user.clientProfile,
+      roleCapabilities,
+      navigationMode: roleCapabilities.navigationMode,
+      hasBusinessAccess: roleCapabilities.hasBusinessAccess,
+      hasClientAccess: roleCapabilities.hasClientAccess,
+    },
+  };
+}
+
+export async function emailPasswordLogin(emailOrUsername, password, requestInfo) {
+  const lowered = emailOrUsername.toLowerCase().trim();
+
+  const user = await prisma.user.findFirst({
+    where: {
+      OR: [
+        { email: lowered },
+        { username: lowered },
+      ],
+    },
+    include: { businessProfile: true, clientProfile: true },
+  });
+
+  if (!user || !user.passwordHash) {
+    throw new ApiError(401, "Invalid email/username or password.");
+  }
+
+  const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+  if (!isPasswordValid) {
+    throw new ApiError(401, "Invalid email/username or password.");
+  }
+
+  if (user.status !== "ACTIVE") {
+    throw new ApiError(403, "This account is not active.");
+  }
+
+  await linkInvoicesAndConnectionsToUser(user);
+
+  const sessionId = crypto.randomUUID();
+  const expiresAt = new Date(Date.now() + SESSION_SECONDS * 1000);
+
+  const token = jwt.sign(
+    {
+      sub: user.id,
+      sid: sessionId,
+    },
+    env.JWT_SECRET,
+    {
+      expiresIn: SESSION_SECONDS,
+      issuer: "bizpilot-ai",
+      audience: "bizpilot-ai-users",
+    }
+  );
+
+  await prisma.authSession.create({
+    data: {
+      id: sessionId,
+      userId: user.id,
+      tokenHash: hashToken(token),
+      expiresAt,
+      ipAddress: requestInfo.ip || null,
+      userAgent: requestInfo.userAgent || null,
+    },
+  });
+
+  const roleCapabilities = await computeUserRoleCapabilities(user);
+
+  return {
+    token,
+    user: {
+      id: user.id,
+      email: user.email,
+      username: user.username,
+      fullName: user.fullName,
+      accountCategory: user.accountCategory,
+      onboardingCompleted: user.onboardingCompleted,
+      businessProfile: user.businessProfile,
+      clientProfile: user.clientProfile,
+      roleCapabilities,
+      navigationMode: roleCapabilities.navigationMode,
+      hasBusinessAccess: roleCapabilities.hasBusinessAccess,
+      hasClientAccess: roleCapabilities.hasClientAccess,
+    },
+  };
+}
+
+export async function emailPasswordRegister({ email, fullName, username, password, accountCategory }, requestInfo) {
+  const normalizedEmail = email.toLowerCase().trim();
+  const normalizedUsername = username.toLowerCase().trim();
+
+  const existingEmail = await prisma.user.findUnique({
+    where: { email: normalizedEmail },
+  });
+  if (existingEmail) {
+    throw new ApiError(409, "An account with this email already exists.");
+  }
+
+  const existingUsername = await prisma.user.findUnique({
+    where: { username: normalizedUsername },
+  });
+  if (existingUsername) {
+    throw new ApiError(409, "This username is already taken.");
+  }
+
+  const passwordHash = await bcrypt.hash(password, 12);
+
+  let user = await prisma.user.create({
+    data: {
+      email: normalizedEmail,
+      username: normalizedUsername,
+      fullName,
+      passwordHash,
+      emailVerifiedAt: null,
+      accountCategory,
+    },
+  });
+
+  if (accountCategory === "BUSINESS") {
+    await prisma.businessProfile.create({
+      data: {
+        userId: user.id,
+        businessName: fullName + "'s Business",
+        businessType: "STARTUP",
+        currency: "INR",
+        country: "India",
+      },
+    });
+  } else if (accountCategory === "CLIENT") {
+    await prisma.clientProfile.create({
+      data: {
+        userId: user.id,
+        country: "India",
+      },
+    });
+  }
+
+  user = await prisma.user.findUnique({
+    where: { id: user.id },
+    include: { businessProfile: true, clientProfile: true },
+  });
+
   await linkInvoicesAndConnectionsToUser(user);
 
   const sessionId = crypto.randomUUID();

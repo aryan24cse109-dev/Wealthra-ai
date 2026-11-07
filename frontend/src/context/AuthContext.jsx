@@ -40,24 +40,17 @@ export const AuthProvider = ({ children }) => {
     initializeAuth();
   }, []);
 
-  const login = async (emailOrUsername, password, roleHint) => {
+  const login = async (emailOrUsername, password) => {
     if (!emailOrUsername || !emailOrUsername.trim()) {
       throw new Error('Email or username is required.');
     }
-    const email = emailOrUsername.trim();
-    const accountCategory = (
-      roleHint ||
-      (email.toLowerCase().includes('client')
-        ? 'CLIENT'
-        : 'BUSINESS')
-    ).toUpperCase();
-
-    const fullName = email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+    if (!password) {
+      throw new Error('Password is required.');
+    }
 
     const res = await authApi.login({
-      email,
-      accountCategory,
-      fullName,
+      emailOrUsername: emailOrUsername.trim(),
+      password,
     });
 
     if (res?.data?.user) {
@@ -83,6 +76,36 @@ export const AuthProvider = ({ children }) => {
     throw new Error(res?.message || 'Login failed');
   };
 
+  const devLogin = async (email, accountCategory = 'BUSINESS', fullName) => {
+    const res = await authApi.devLogin({
+      email,
+      accountCategory,
+      fullName,
+    });
+
+    if (res?.data?.user) {
+      const loggedInUser = res.data.user;
+      const token = res.data.token;
+      if (token) localStorage.setItem('bizpilot_token', token);
+      setUser(loggedInUser);
+
+      const navMode = loggedInUser.roleCapabilities?.navigationMode || loggedInUser.navigationMode;
+      const userRole = navMode === 'CLIENT_ONLY' ? 'client' : 'business';
+      setActiveRole(userRole);
+      localStorage.setItem('bizpilot_active_role', userRole);
+
+      const ws = {
+        id: loggedInUser.id,
+        name: loggedInUser.businessProfile?.businessName || `${loggedInUser.fullName}'s Workspace`,
+      };
+      setActiveWorkspace(ws);
+      localStorage.setItem('bizpilot_active_workspace', ws.id);
+
+      return loggedInUser;
+    }
+    throw new Error(res?.message || 'Dev login failed');
+  };
+
   const googleSignIn = async (credential, accountCategory = 'BUSINESS') => {
     const res = await authApi.googleLogin(credential, accountCategory);
     if (res?.data?.user) {
@@ -95,6 +118,14 @@ export const AuthProvider = ({ children }) => {
       const userRole = navMode === 'CLIENT_ONLY' ? 'client' : 'business';
       setActiveRole(userRole);
       localStorage.setItem('bizpilot_active_role', userRole);
+
+      const ws = {
+        id: loggedInUser.id,
+        name: loggedInUser.businessProfile?.businessName || `${loggedInUser.fullName}'s Workspace`,
+      };
+      setActiveWorkspace(ws);
+      localStorage.setItem('bizpilot_active_workspace', ws.id);
+
       return loggedInUser;
     }
     throw new Error(res?.message || 'Google authentication failed');
@@ -109,7 +140,7 @@ export const AuthProvider = ({ children }) => {
     }
     const email = formData.email || formData.businessEmail;
     if (!email) throw new Error('Email is required for registration.');
-    return login(email, formData.password || '', formData.accountCategory);
+    return login(email, formData.password || '');
   };
 
   const logout = async () => {
@@ -143,6 +174,7 @@ export const AuthProvider = ({ children }) => {
         activeRole,
         loading,
         login,
+        devLogin,
         googleSignIn,
         register,
         logout,
