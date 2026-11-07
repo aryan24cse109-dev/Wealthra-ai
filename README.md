@@ -34,20 +34,24 @@ BizPilot AI helps freelancers, startups, and agencies run their business operati
 
 ---
 
-## 🔗 Live Links
+## 🔗 Live Deployments & Health Endpoints
 
-| Service | URL |
-|---|---|
-| 🔧 **Backend API (Live)** | [bizpilot-ai-backend.onrender.com](https://bizpilot-ai-backend.onrender.com) |
-| 🌐 **Frontend** | [biz-pilot-ai.onrender.com](https://biz-pilot-ai.onrender.com) |
-| 🤖 **AI Service** | [bizpilot-ai-service.onrender.com](https://bizpilot-ai-service.onrender.com) |
-| 🎥 **YouTube Demo** | [Watch Full Project Demo](https://youtu.be/mG45OiztM1I) <!-- TODO: replace YOUR_VIDEO_ID with the real video ID --> |
-| 💻 **GitHub** | [github.com/aryan24cse109-dev/BizPilot-AI](https://github.com/aryan24cse109-dev/BizPilot-AI) |
+| Component | Target / Environment | Live URL | Health & Wake-Up Endpoint |
+|---|---|---|---|
+| 🌐 **Frontend** | Vercel Production | [wealthra-ai.vercel.app](https://wealthra-ai.vercel.app/) | — |
+| ⚙️ **Backend API** | Render (Free Tier) | [bizpilot-ai-1-o2e5.onrender.com](https://bizpilot-ai-1-o2e5.onrender.com) | [GET /api/health](https://bizpilot-ai-1-o2e5.onrender.com/api/health) |
+| 🤖 **AI Microservice** | Render (Free Tier) | [bizpilot-ai-cx0e5.onrender.com](https://bizpilot-ai-cx0e5.onrender.com) | [GET /api/health](https://bizpilot-ai-cx0e5.onrender.com/api/health) · [GET /ready](https://bizpilot-ai-cx0e5.onrender.com/api/health/ready) |
+| 🎥 **Video Walkthrough** | YouTube | [Watch Demo](https://youtu.be/mG45OiztM1I) | — |
+| 💻 **Source Repository** | GitHub | [Wealthra-ai](https://github.com/aryan24cse109-dev/Wealthra-ai) | — |
 
-> [!CAUTION]
-> **Render Free Tier — Cold Start Warning**
-> The services spin down after **15 minutes of inactivity**. If the API is unresponsive on first hit, open the backend link above to wake it up. The first response may take **~30–60 seconds**; later requests are fast.
-> Wake the **backend and AI service** both before a demo.
+> [!IMPORTANT]
+> ### ⚡ Service Warm-Up & Sleep Policy (Render Free Tier)
+> Both the **Backend API** and **AI Microservice** are deployed on Render's managed compute tier, which automatically enters an idle sleep state after 15 minutes of inactivity.
+>
+> **To ensure uninterrupted evaluation:**
+> 1. **Awaken the Backend:** Click 👉 **[Backend Health Check](https://bizpilot-ai-1-o2e5.onrender.com/api/health)**. Wait ~30–50 seconds for the instance to transition from idle to active (you will receive a JSON response `{"status":"ok"}`).
+> 2. **Awaken the AI Microservice:** Click 👉 **[AI Service Health Check](https://bizpilot-ai-cx0e5.onrender.com/api/health)** or **[Readiness Endpoint](https://bizpilot-ai-cx0e5.onrender.com/api/health/ready)** to warm up the Sarvam STT & Groq inference gateway.
+> 3. **Launch the App:** Once both backend and AI services respond, open 👉 **[Wealthra AI Frontend](https://wealthra-ai.vercel.app/)** for seamless, real-time performance.
 
 ---
 
