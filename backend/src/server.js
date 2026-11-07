@@ -1,3 +1,4 @@
+
 import app from "./app.js";
 import { env } from "./config/env.js";
 
@@ -14,6 +15,10 @@ async function startServer() {
     // Connect to PostgreSQL first
     await connectDatabase();
 
+    // Trust the first proxy (Render) so Express can correctly
+    // identify client IPs from the X-Forwarded-For header.
+    app.set("trust proxy", 1);
+
     // Start Express
     server = app.listen(env.PORT, () => {
       console.log("----------------------------------");
@@ -25,6 +30,7 @@ async function startServer() {
     });
   } catch (error) {
     console.error("Failed to start BizPilot AI backend:", error);
+
     await disconnectDatabase().catch(() => {});
     process.exitCode = 1;
   }
