@@ -8,38 +8,37 @@
 
 ## 💡 Overview
 
-In **Wealthra AI**, our team integrated **Switch** to bridge team communication with backend execution. Through the Switch Discord bot on our team server (**`CtrlDEVWin`**), human teammates can assign and collaborate with our autonomous agent — **`codebuddy`** — directly inside the chat room.
+In **Wealthra AI**, our team integrated **Switch** to turn solo AI capabilities into an active, collaborative developer sitting directly inside our Discord server (**`CtrlDEVWin`**). 
 
-Instead of manually logging into multiple dashboards to draft invoices, perform tax calculations, and verify payment webhooks, any team member can summon `codebuddy` inside `#general` to perform real, end-to-end business operations.
+Through the Switch Discord bot, our team assigns and interacts with **`codebuddy`** in `#general` to perform mission-critical developer workflows on demand — from generating production-grade cryptographic webhook handlers to validating payment idempotency and test scripts.
 
 ---
 
 ## 🤖 1. Connected Agent: `codebuddy`
 
-Through Switch, we connected our core autonomous agent:
+Through Switch, we connected our core coding & operations agent:
 
 ```mermaid
 flowchart LR
-    Dev["👤 Team Member\n(Daksh / Teammate)"] -->|Discord Commands\n& Natural Language| SwitchBot["⚡ Switch Discord Bot\n(CtrlDEVWin Server)"]
-    SwitchBot <-->|Real-time IPC / Bridge| CodeBuddy["🤖 codebuddy\n(Wealthra AI Operations Agent)"]
-    CodeBuddy <-->|API Calls & DB Operations| Backend["⚙️ Wealthra AI Core\n(Express 5 + Prisma + PostgreSQL)"]
-    Backend <-->|Order & Webhook Events| RZP["💳 Razorpay Sandbox Engine"]
+    Dev["👤 Team Member\n(Daksh / Teammate)"] -->|Discord Commands\n& Task Brief| SwitchBot["⚡ Switch Discord Bot\n(CtrlDEVWin Server)"]
+    SwitchBot <-->|Real-time IPC / Bridge| CodeBuddy["🤖 codebuddy\n(Wealthra AI Developer Agent)"]
+    CodeBuddy -->|Generates Production Code\n& Test Suites| Backend["⚙️ Wealthra AI Core\n(Express 5 + Prisma + PostgreSQL)"]
+    Backend <-->|HMAC-SHA256 Webhooks| RZP["💳 Razorpay Payment Gateway"]
 ```
 
 ### Agent Profile:
-- **Agent Identifier:** `codebuddy`
+- **Agent Name:** `codebuddy`
 - **Assigned Room:** `#general` on server `CtrlDEVWin`
-- **Capabilities:**
-  - Automated 18% GST calculation and decimal monetary precision (`decimal.js`).
-  - Invoice draft preparation and sequential numbering (`INV-2026-XXXX`).
-  - Client details extraction and validation via Zod schemas.
-  - Razorpay payment order monitoring & HMAC-SHA256 signature verification guidance.
+- **Core Functionality Demonstrated in Video:**
+  - Writing production-grade Express 5 route handlers with HMAC-SHA256 cryptographic signature validation.
+  - Implementing idempotent payment status transitions (`PAID`) against duplicate webhook delivery.
+  - Generating executable `curl` test commands to verify live integration without manual mocking.
 
 ---
 
 ## 💬 2. Channel & Discord Setup
 
-Switch maps communication streams so that `codebuddy` functions like a team member inside Discord:
+Switch maps communication streams so that `codebuddy` functions like a developer teammate inside Discord:
 
 ```mermaid
 sequenceDiagram
@@ -48,76 +47,73 @@ sequenceDiagram
     participant Disc as 💬 Discord (#general)
     participant Bot as ⚡ Switch Bot
     participant CB as 🤖 codebuddy
-    participant DB as 🗄️ PostgreSQL
+    participant RZP as 💳 Razorpay Engine
 
     Dev->>Disc: /assign-agent → codebuddy
     Disc->>Bot: Assign to #general
     Bot-->>Disc: 🟢 Agent status: codebuddy active
     
-    Dev->>Disc: "@codebuddy Rahul needs ₹15,000 website dev invoice"
+    Dev->>Disc: "@codebuddy Build a verified Razorpay webhook module with HMAC-SHA256"
     Disc->>CB: Route prompt via Switch bridge
-    CB->>CB: Compute: Subtotal ₹15k + 18% GST (₹2,700) = ₹17,700
-    CB-->>Disc: 📋 Structured Invoice Draft + Razorpay checkout details
-    Dev->>Disc: "Approve draft"
-    CB->>DB: Save INV-2026-0001 (Decimal cents precision)
-    CB-->>Disc: ✅ Invoice committed + PDF ready with QR payment code
+    CB->>CB: Synthesizes crypto verifier + idempotency + route handler
+    CB-->>Disc: 💻 Full production code + curl test command
+    Dev->>RZP: Execute simulated curl webhook
+    RZP-->>Disc: ✅ Verified signature + invoice marked PAID
 ```
 
-### Channel Details:
+### Discord Setup:
 - **Server:** `CtrlDEVWin`
 - **Room:** `#general`
-- **Switch Slash Commands:**
-  - `/agents-status` — Checks live status of connected Switch agents.
+- **Switch Slash Commands Used:**
   - `/assign-agent` — Assigns `codebuddy` to the current text channel.
+  - `/agents-status` — Verifies that `codebuddy` is live (🟢).
 
 ---
 
-## 🚀 3. How to Run & Replicate the Setup
+## 🚀 3. How to Call, Use, and Test `codebuddy`
 
-### Prerequisites
-1. Discord Account & access to server `CtrlDEVWin`.
-2. Switch Desktop App / CLI installed and authenticated with your Switch token.
-3. Node.js 20+ and repository cloned locally.
-
-### Step 1: Start the Local Agent Daemon
-```bash
-# In your terminal, initialize the Switch agent
-switch agent start --name codebuddy
-```
-
-### Step 2: Assign `codebuddy` to Discord
-1. Open Discord → go to server **`CtrlDEVWin`** → channel **`#general`**.
+### Step 1: Assign `codebuddy` in Discord
+1. Open Discord → Navigate to server **`CtrlDEVWin`** → channel **`#general`**.
 2. Type `/assign-agent` and select **`codebuddy`**.
-3. Verify status by running:
+3. Confirm with `/agents-status`:
    ```
-   /agents-status
+   Agent status in this room: - 🟢 codebuddy
    ```
-   You will see: `Agent status in this room: - 🟢 codebuddy`.
 
-### Step 3: Call & Use `codebuddy`
-Mention `@codebuddy` or send a natural language business operations prompt directly in `#general`:
+---
+
+### Step 2: The Core Hackathon Prompt (Option 1)
+Paste this prompt in `#general`:
 
 ```text
-@codebuddy A client named Rahul has requested website development services worth ₹15,000. 
+@codebuddy We need a verified Razorpay webhook integration module for Wealthra AI.
 
-Please execute the following:
-1. Extract client and service details.
-2. Calculate 18% GST and prepare the invoice draft (Subtotal, GST, Total).
-3. Confirm the sequential numbering (INV-2026-0001) and explain the Razorpay Sandbox payment simulation steps.
+Please write a production-ready Node.js Express route handler that:
+1. Validates the incoming Razorpay webhook signature using crypto HMAC-SHA256 with RAZORPAY_WEBHOOK_SECRET.
+2. Extracts event 'payment.captured', parses the invoice ID from notes, and updates invoice status to PAID.
+3. Implements strict idempotency checking so duplicate webhook retries don't double-charge.
+4. Provide a sample curl test command to simulate a successful payment event.
 ```
 
-`codebuddy` will process the instruction, calculate the exact financial figures, and return the structured invoice blueprint right in the Discord thread!
+---
+
+### Step 3: What `codebuddy` Delivers
+Within seconds, `codebuddy` outputs:
+1. **`crypto.createHmac('sha256', secret)` verification logic** to protect against spoofed transactions.
+2. **Prisma database update query** targeting the verified invoice.
+3. **Idempotency guard** to reject already-processed webhook events.
+4. **Copy-pasteable `curl` test command** with dummy payload and signature headers.
 
 ---
 
 ## 🔗 Live Deployments
 
-| Component | URL | Health Check / Status |
-|---|---|---|
-| 🌐 **Frontend** | [wealthra-ai.vercel.app](https://wealthra-ai.vercel.app/) | Live Production |
-| ⚙️ **Backend API** | [bizpilot-ai-1-o2e5.onrender.com](https://bizpilot-ai-1-o2e5.onrender.com) | [GET /api/health](https://bizpilot-ai-1-o2e5.onrender.com/api/health) |
-| 🤖 **AI Microservice** | [bizpilot-ai-cx0e5.onrender.com](https://bizpilot-ai-cx0e5.onrender.com) | [GET /api/health](https://bizpilot-ai-cx0e5.onrender.com/api/health) |
-| 🎥 **Video Demo** | [Watch YouTube Walkthrough](https://youtu.be/mG45OiztM1I) | Full Demonstration |
+| Component | Target / Environment | Live URL | Health / Wake-up Endpoint |
+|---|---|---|---|
+| 🌐 **Frontend** | Vercel Production | [wealthra-ai.vercel.app](https://wealthra-ai.vercel.app/) | — |
+| ⚙️ **Backend API** | Render (Free Tier) | [bizpilot-ai-1-o2e5.onrender.com](https://bizpilot-ai-1-o2e5.onrender.com) | [GET /api/health](https://bizpilot-ai-1-o2e5.onrender.com/api/health) |
+| 🤖 **AI Microservice** | Render (Free Tier) | [bizpilot-ai-cx0e5.onrender.com](https://bizpilot-ai-cx0e5.onrender.com) | [GET /api/health](https://bizpilot-ai-cx0e5.onrender.com/api/health) |
+| 🎥 **Video Walkthrough** | YouTube | [Watch Demo](https://youtu.be/mG45OiztM1I) | — |
 
 ---
 
