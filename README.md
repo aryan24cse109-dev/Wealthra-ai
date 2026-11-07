@@ -288,6 +288,54 @@ erDiagram
 
 ---
 
+## 💳 Payments — Razorpay Integration
+
+BizPilot AI uses **Razorpay** as its primary payment gateway for processing invoices.
+
+### How it works in the Demo
+
+Since this is a demo/sandbox environment, **no real money is charged**. Use the Razorpay test credentials below to simulate payments:
+
+| Field | Value |
+|---|---|
+| 💳 **Test Card Number** | `4111 1111 1111 1111` |
+| 📅 **Expiry** | Any future date (e.g. `12/26`) |
+| 🔐 **CVV** | Any 3 digits (e.g. `123`) |
+| 📱 **Test UPI ID** | `success@razorpay` |
+| 🏦 **Net Banking** | Select any bank → auto success |
+
+> [!IMPORTANT]
+> **This is Razorpay Sandbox mode.** All payments in the demo are simulated — no real transactions occur. The payment flow is 100% functional but uses Razorpay's test environment.
+
+### Razorpay Demo Payment Flow
+
+```mermaid
+flowchart LR
+    A["🧾 Open Invoice"] --> B["Click Pay Now"]
+    B --> C["Razorpay Checkout Popup"]
+    C --> D{Choose Method}
+    D -->|Card| E["Enter Test Card\n4111 1111 1111 1111"]
+    D -->|UPI| F["Enter success@razorpay"]
+    D -->|Net Banking| G["Select any bank"]
+    E --> H["✅ Payment Simulated"]
+    F --> H
+    G --> H
+    H --> I["Invoice marked PAID\nin database"]
+    I --> J["Backend verifies\nHMAC-SHA256 signature"]
+```
+
+### Supported Payment Methods (Sandbox)
+
+| Method | Test Value | Result |
+|---|---|---|
+| Credit/Debit Card | `4111 1111 1111 1111` | ✅ Success |
+| UPI | `success@razorpay` | ✅ Success |
+| UPI (failure test) | `failure@razorpay` | ❌ Failure |
+| Net Banking | Any bank | ✅ Success |
+| Wallet | Any wallet | ✅ Success |
+
+---
+
 ## 🚀 Getting Started (Local Development)
 
 ### Prerequisites

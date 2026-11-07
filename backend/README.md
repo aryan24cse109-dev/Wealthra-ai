@@ -288,6 +288,35 @@ sequenceDiagram
 
 ---
 
+## 💳 Razorpay — Sandbox Setup & Test Credentials
+
+BizPilot AI integrates **Razorpay** as the primary payment gateway. The demo runs in **Razorpay Sandbox mode** — fully functional flow, no real money charged.
+
+### Test Credentials for Demo
+
+| Method | Test Value | Expected Result |
+|---|---|---|
+| 💳 Card | `4111 1111 1111 1111` | ✅ Payment success |
+| 📅 Expiry | Any future date | — |
+| 🔐 CVV | Any 3 digits | — |
+| 📱 UPI (success) | `success@razorpay` | ✅ Payment success |
+| 📱 UPI (failure) | `failure@razorpay` | ❌ Payment failed |
+| 🏦 Net Banking | Any bank | ✅ Payment success |
+| 👛 Wallet | Any wallet | ✅ Payment success |
+
+### What happens after a Razorpay payment
+
+1. Frontend receives `payment_id`, `order_id`, `signature` from Razorpay
+2. Backend verifies **HMAC-SHA256 signature** — rejects tampered responses
+3. Idempotency check — prevents double-charging on duplicate webhook
+4. Invoice status updated to `PAID` in PostgreSQL
+5. Razorpay also fires a **signed webhook** as a secondary confirmation
+
+> [!IMPORTANT]
+> Never use real card numbers in sandbox mode. The test card `4111 1111 1111 1111` is a globally recognized Razorpay/Stripe test card that always succeeds in sandbox.
+
+---
+
 ## 🚀 Local Setup
 
 ```bash

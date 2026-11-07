@@ -193,6 +193,23 @@ npm run preview
 
 ---
 
+## 💳 Razorpay Demo Payments
+
+This app uses **Razorpay Sandbox** — no real money is charged. Use these test credentials when the payment popup appears:
+
+| Method | Test Value | Result |
+|---|---|---|
+| 💳 Card Number | `4111 1111 1111 1111` | ✅ Success |
+| 📅 Expiry | Any future date (e.g. `12/26`) | — |
+| 🔐 CVV | Any 3 digits (e.g. `123`) | — |
+| 📱 UPI ID | `success@razorpay` | ✅ Success |
+| 🏦 Net Banking | Select any bank | ✅ Success |
+
+> [!NOTE]
+> Razorpay Sandbox is fully functional — the entire payment flow (order creation → checkout → HMAC webhook verification → invoice marked PAID) runs end-to-end, just with test/simulated money.
+
+---
+
 ## 🔐 Demo Credentials
 
 | Role | Email | Password |
