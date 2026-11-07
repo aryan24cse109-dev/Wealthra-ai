@@ -1,6 +1,6 @@
 # ⚙️ BizPilot AI — Backend
 
-> **Node.js + Express 5 + Prisma + PostgreSQL** · REST API · Built by **DEVRATOR**
+> **Node.js + Express 5 + Prisma + PostgreSQL** · REST API · Built by **Wealthra AI**
 
 BizPilot AI is an AI-powered business management platform that enables freelancers, startups, and agencies to manage invoicing, payments, client collaboration, and financial reporting — with a multilingual AI assistant that understands English, Hindi, and Hinglish. The backend is the authoritative service for all business logic, database operations, payment processing, and AI workflow execution.
 
@@ -13,7 +13,7 @@ BizPilot AI is an AI-powered business management platform that enables freelance
 | 🔧 **Backend API (Live)** | [https://bizpilot-ai-backend.onrender.com](https://bizpilot-ai-backend.onrender.com) |
 | 🌐 **Frontend** | [https://biz-pilot-ai.onrender.com](https://biz-pilot-ai.onrender.com) |
 | 🤖 **AI Service** | [https://bizpilot-ai-service.onrender.com](https://bizpilot-ai-service.onrender.com) |
-| 🎥 **YouTube Demo** | [Watch Full Project Demo](https://www.youtube.com/watch?v=YOUR_VIDEO_ID) |
+| 🎥 **YouTube Demo** | [Watch Full Project Demo](https://youtu.be/mG45OiztM1I) |
 | 💻 **GitHub** | [github.com/aryan24cse109-dev/BizPilot-AI](https://github.com/aryan24cse109-dev/BizPilot-AI) |
 
 > [!CAUTION]
@@ -354,4 +354,4 @@ npm run dev              # http://localhost:5000
 
 ## ©️ Ownership
 
-> All rights reserved. This project is owned by **DEVRATOR**.
+> All rights reserved. This project is owned by **Wealthra AI**.

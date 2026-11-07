@@ -1,6 +1,6 @@
 # 🚀 BizPilot AI — Frontend
 
-> **React 18 + Vite + Tailwind CSS** · Charcoal & Emerald Fintech Theme · Built by **DEVRATOR**
+> **React 18 + Vite + Tailwind CSS** · Charcoal & Emerald Fintech Theme · Built by **Wealthra AI**
 
 BizPilot AI is an AI-powered business management platform for freelancers, startups, and small enterprises — handling invoicing, payments, client collaboration, and financial intelligence through a multilingual AI assistant. The frontend is a fast, modern SPA built with Vite, React 18, TanStack Query, and Recharts, communicating with the BizPilot backend REST API.
 
@@ -13,7 +13,7 @@ BizPilot AI is an AI-powered business management platform for freelancers, start
 | 🌐 **Frontend (Live)** | [https://biz-pilot-ai.onrender.com](https://biz-pilot-ai.onrender.com) |
 | 🔧 **Backend API** | [https://bizpilot-ai-backend.onrender.com](https://bizpilot-ai-backend.onrender.com) |
 | 🤖 **AI Service** | [https://bizpilot-ai-service.onrender.com](https://bizpilot-ai-service.onrender.com) |
-| 🎥 **YouTube Demo** | [Watch Full Project Demo](https://www.youtube.com/watch?v=YOUR_VIDEO_ID) |
+| 🎥 **YouTube Demo** | [Watch Full Project Demo](https://youtu.be/mG45OiztM1I) |
 | 💻 **GitHub** | [github.com/aryan24cse109-dev/BizPilot-AI](https://github.com/aryan24cse109-dev/BizPilot-AI) |
 
 > [!CAUTION]
@@ -221,4 +221,4 @@ This app uses **Razorpay Sandbox** — no real money is charged. Use these test 
 
 ## ©️ Ownership
 
-> All rights reserved. This project is owned by **DEVRATOR**.
+> All rights reserved. This project is owned by **Wealthra AI**.

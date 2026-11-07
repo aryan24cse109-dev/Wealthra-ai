@@ -1,6 +1,6 @@
 # 🤖 BizPilot AI — AI Service
 
-> **Node.js + Express 5 · Sarvam Saaras v4 STT · Groq LLM · Multilingual NLP** · Built by **DEVRATOR**
+> **Node.js + Express 5 · Sarvam Saaras v4 STT · Groq LLM · Multilingual NLP** · Built by **Wealthra AI**
 
 BizPilot AI is an AI-powered business management platform for freelancers, startups, and agencies. The AI Service is a dedicated microservice responsible for natural-language understanding, speech-to-text transcription, and structured intent parsing — powering the multilingual AI assistant that understands English, Hindi, and Hinglish commands like *"Rahul ke liye 15000 rupees ka invoice banao"*.
 
@@ -13,7 +13,7 @@ BizPilot AI is an AI-powered business management platform for freelancers, start
 | 🤖 **AI Service (Live)** | [https://bizpilot-ai-service.onrender.com](https://bizpilot-ai-service.onrender.com) |
 | 🔧 **Backend API** | [https://bizpilot-ai-backend.onrender.com](https://bizpilot-ai-backend.onrender.com) |
 | 🌐 **Frontend** | [https://biz-pilot-ai.onrender.com](https://biz-pilot-ai.onrender.com) |
-| 🎥 **YouTube Demo** | [Watch Full Project Demo](https://www.youtube.com/watch?v=YOUR_VIDEO_ID) |
+| 🎥 **YouTube Demo** | [Watch Full Project Demo](https://youtu.be/mG45OiztM1I) |
 | 💻 **GitHub** | [github.com/aryan24cse109-dev/BizPilot-AI](https://github.com/aryan24cse109-dev/BizPilot-AI) |
 
 > [!CAUTION]
@@ -261,4 +261,4 @@ curl http://localhost:5001/api/health
 
 ## ©️ Ownership
 
-> All rights reserved. This project is owned by **DEVRATOR**.
+> All rights reserved. This project is owned by **Wealthra AI**.
