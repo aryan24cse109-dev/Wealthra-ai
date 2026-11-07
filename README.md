@@ -8,6 +8,13 @@
 
 > **REST API for BizPilot AI** — invoicing, payments, client collaboration, financial reporting, and a multilingual (English / Hindi / Hinglish) AI assistant. Built by **Wealthra AI**.
 
+> [!TIP]
+> ### 🏆 Flip the Switch Hackathon Documentation
+> Looking for the hackathon-specific submission guide? Read **[SWITCH_README.md](./SWITCH_README.md)** for:
+> - 🤖 **Connected Agents**: Multilingual Voice Agent (Sarvam), Operations/Invoicing Agent (Groq), Payment/Audit Agent (Razorpay)
+> - 💬 **Channel Setup**: `#ops-assistant`, `#invoice-approvals`, `#payment-feed`
+> - 🚀 **How to Run**: Complete setup instructions and Switch integration walkthrough.
+
 BizPilot AI helps freelancers, startups, and agencies run their business operations. This backend is the **authoritative service** for all business logic, database operations, payment processing, and AI workflow execution.
 
 ---
